@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>test</title>
+</head>
+<body>
+  <div></div>
+  <canvas id="mycanvas" width="200" height="400" style="border: 1px solid #666"></canvas>
+  <script>
+    (function(){
+      window.$ = function(selector){
+        return document.querySelector(selector)
+      }
+      Element.prototype.addCls = function(selector){
+        console.log(this)
+      }
+      var Tt = function(selector,options){
+        this.canvas = document.querySelector(selector)
+        this.ctx = this.canvas.getContext('2d')
+        this.rate = this.canvas.width/window.outerWidth
+        this.init('你说啥呢')
+      }
+      Tt.prototype = {
+        constructor:Tt,
+        init:function(info){
+          console.log(window)
+          console.log(info)
+          this.say()
+          this.resize()
+
+        },
+        say:function(){
+          console.log('say')
+        },
+        resize:function(){
+          let self = this
+          window.onresize = function(e){
+            // console.log(self.rate)
+            // console.log(window.innerWidth)
+            // console.log(self)
+            self.canvas.width = window.innerWidth * self.rate
+
+          }
+        }
+      }
+      window.Tt = Tt
+
+    }())
+    
+    var kk = new Tt('#mycanvas',{})
+    $('#mycanvas').addCls('lll')  
+  </script>
+  
+</body>
+</html>

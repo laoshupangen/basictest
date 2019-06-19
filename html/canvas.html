@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="mycanvas" width="400" height="600"></canvas>
+    <script>
+        var can = document.querySelector('#mycanvas')
+        var ctx = can.getContext('2d')
+        var width = can.width,height = can.height
+        var pies = []
+        var defalutOptions = {
+            center:{x:width/2,y:height/2},
+            radius:{R:(width>height?height:width)/4,r:(width>height?height:width)/8},
+
+        }
+        var drawCircle = function(start,end,fillstyle){
+            console.log(defalutOptions)
+            ctx.beginPath()
+            ctx.arc(defalutOptions.center.x,defalutOptions.center.y,defalutOptions.radius.R,start,end)
+            ctx.arc(defalutOptions.center.x,defalutOptions.center.y,defalutOptions.radius.r,end,start,true)
+            ctx.closePath()
+            ctx.fillStyle = fillstyle
+            ctx.fill()
+
+        }
+        var drawLine = function(startPoint,endPoint,fillStyle){
+            ctx.beginPath(startPoint)
+            ctx.moveTo(startPoint.x,startPoint.y)
+            ctx.lineTo(endPoint.x,endPoint.y)
+            ctx.closePath
+            ctx.strokeStyle = fillStyle
+            ctx.stroke()
+
+        }
+
+        function getPieCenter(pie,l1,l2,fillStyle){
+            let pieCenterA = (pie.startAngle + pie.endAngle)/2 
+            let pieCenterL = (pie.r + pie.R)/2
+            let sp1 = {x:pieCenterL*Math.cos(pieCenterA)+pie.center.x,y:pie.center.y+pieCenterL*Math.sin(pieCenterA)}
+            let sp2 = {x:sp1.x+l1*Math.cos(pieCenterA),
+                       y:sp1.y+l1*Math.sin(pieCenterA)}
+            drawLine(sp1,sp2,fillStyle)
+            let sp3 = {
+                x:sp2.x+l2*(Math.cos(pieCenterA)<0?-1:1),
+                y:sp2.y
+            }
+            drawLine(sp2,sp3,fillStyle)
+            
+
+        }
+        
+
+        var drawTipLine = function(sPoint,l1,l2){
+            
+
+        }
+        // drawCircle(0,Math.PI/2,'red')
+        var animate = function(start,end,fillStyle){
+           
+            let delta = Math.PI/45
+
+            var timer = function(p){
+                // let k = start
+                window.requestAnimationFrame(function(){
+                    
+                    // let m = k
+
+                    drawCircle(p,p+delta,fillStyle)
+                    p += delta
+                    if(p<=end){
+                        timer(p)
+                    }else{
+                        
+                        drawCircle(start,end,fillStyle)
+                        let pie = {
+                            startAngle:start,
+                            endAngle:end,
+                            r:50,
+                            R:100,
+                            center:{
+                                x:defalutOptions.center.x,
+                                y:defalutOptions.center.y,
+
+                            }
+
+
+                        }
+                        getPieCenter(pie,100,50,fillStyle)
+                    }
+                })
+            }
+             
+            timer(start)
+
+        }
+        // animate(0,Math.PI/2,'red')
+
+        var data = [{value:5,name:'111'},{value:150,name:'222'}]
+        var colors = ['blue','red']
+        let temd = data.reduce((a,b) => {
+
+            return a.value+b.value
+        });
+       
+
+        let temangle = data.map((item,k)=>{
+            
+            let start = k===0?0:data[k-1].end
+            let end = start + item.value*2*Math.PI/temd
+            data[k] = {
+                start:start,
+                end:end
+            }
+            return data[k]
+        })
+        
+        temangle.forEach((item,k)=>{
+            console.log(item)
+            console.log(colors[k])
+            animate(item.start,item.end,colors[k])
+        })
+            // animate(temangle[0].start,temangle[0].end,colors[0])
+      
+    </script>
+    
+</body>
+</html>
