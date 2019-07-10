@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="wrap"></div>
+    <script>
+      var temdata = [{id:'1',value:'dhjaa',parentId:'0'},{id:'2',value:'djd',parentId:'0'},
+      {id:'3',value:'dhjaa',parentId:'1'},{id:'4',value:'djd',parentId:'2'},
+      {id:'5',value:'dhjaa',parentId:'1'},{id:'6',value:'djd',parentId:'1'},
+      {id:'7',value:'dhjaa',parentId:'1'},{id:'8',value:'djd',parentId:'1'},
+      {id:'9',value:'dhjaa',parentId:'2'},{id:'10',value:'djd',parentId:'2'},
+      {id:'11',value:'dhjaa',parentId:'2'},{id:'12',value:'djd',parentId:'2'}
+      ]  
+      var test = {
+          initDom:'<divs>test<div>',
+          initData:[],
+          selectId:[],
+          init:function(selector){
+              let da = this.getData('0')
+              let domi = this.dataToDom(da)
+              document.querySelector(selector).innerHTML = domi
+              let td = document.querySelector('.abc')
+              this.handle(td)
+
+          },
+          handle:function(el){
+            let _this = this  
+            el.addEventListener('click',function(){
+                console.log(this)
+                let id = this.id
+                if(_this.selectId.indexOf(id)!==-1){
+                    return
+                }
+                _this.selectId.push(id)
+                let da = _this.getData(id)
+                console.log(da)
+                if(da.length===_this.initData.length){return}
+                let domi = _this.dataToDom(da)
+                this.parentNode.insertAdjacentHTML('afterEnd',domi)
+                
+            },false)
+          },
+          order:function(){
+              let t = []
+              temdata.forEach(data=>{
+
+              })
+          },
+          dataToDom:function(data){
+             let dom = data.map(d=>d = '<div parentId='+d.parentId+'><span></span><span class="abc" id='+d.id+'>'+d.id+d.value+'</span></div>')
+             return dom.join('')
+          },
+          getData:function(id){
+              let t =[]
+              temdata.forEach(data=>{
+                  if(data.parentId===id){
+                      t.push(data)
+                  }
+             })
+             
+             
+             return t
+          }
+      }
+      test.init('#wrap')
+      test.getData('1')
+      console.log(test.getData('1'))
+    </script>
+</body>
+</html>
