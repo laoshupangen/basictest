@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,73 +8,86 @@
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts.js"></script>
 </head>
+
 <body>
     <div id="mycharts" style="width: 100%;height:400px;"></div>
     <script>
-       window.onresize = function(){
-        chart.resize()
-       } 
-       var chart = echarts.init(document.getElementById('mycharts'))
-       var barLabel = {
-        normal:{
-                      show:true,
-                      textBorderCorlor:'auto',
-                  }
+        window.onresize = function () {
+            chart.resize()
+        }
+        var chart = echarts.init(document.getElementById('mycharts'))
+        var barLabel = {
+            normal: {
+                show: true,
+                textBorderCorlor: 'auto',
+            }
 
-       }
-       var options = {
-           title:{
-               text:'异常数据表'
-           },
-           tooltip:{
-               trigger:'axis',
-               axisPointer:{
-                   type:'shadow'
-               }
-           },
-           
-           toolbox:{
-               feature:{
-                   saveAsImage:{},
-                   dataZoom:{},
-                   
-               }
-           },
-           legend:{
-               data:['未出','晚归','异常']
-           },
-           xAxis:{
-               type:'value',
-               name:'days',
-           },
-           yAxis:{
-               type:'category',
-               data:['机构1','机构2','机构3']
-           },
-           series:[{
-              name:'未出',
-              type:'bar',
-              barGap:'0',
-              data:[10,20,30],
-              label:barLabel
-           },{
-               name:'晚归',
-               type:'bar',
-               data:[20,10,40],
-               label:barLabel
-           },{
-               name:'异常',
-               type:'bar',
-               data:[30,20,20],
-               label:barLabel
-           }]
-       }
-       chart.setOption(options)
-       chart.on('click',function(p){
-           console.log(p)
+        }
+        var options = {
+            title: {
+                text: '异常数据表'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            color: ['#d48265', '#91c7ae', '#749f83'],
 
-       })
+            legend: {
+                data: ['未出', '晚归', '异常']
+            },
+            yAxis: {
+                type: 'value',
+                name: 'days',
+            },
+            xAxis: {
+                type: 'category',
+                data: ['机构1', '机构2', '机构3', '机构4'],
+                triggerEvent:true
+            },
+            dataZoom: [
+                {
+                    type: 'inside'
+                }
+            ],
+            series: [{
+                name: '未出',
+                type: 'bar',
+                barGap: '0',
+                data: [10, 20, 30, 20],
+                label: barLabel,
+                itemStyle: {
+                    barBorderRadius: [20, 20, 0, 0]
+                }
+            }, {
+                name: '晚归',
+                type: 'bar',
+                data: [20, 10, 40, 30],
+                label: barLabel
+            }, {
+                name: '异常',
+                type: 'bar',
+                data: [30, 20, 20, 50],
+                label: barLabel
+            }]
+        }
+        chart.setOption(options)
+        const zoomSize = 2
+        chart.on('click', function (p) {
+            console.log(p)
+            let d = options.xAxis.data
+            console.log(d)
+            chart.dispatchAction({
+                type: 'dataZoom',
+                startValue: d[Math.max(p.dataIndex - zoomSize / 2, 0)],
+                endValue: d[Math.min(p.dataIndex + zoomSize / 2, d.length - 1)]
+            })
+
+        })
     </script>
-    
+
 </body>
+
 </html>

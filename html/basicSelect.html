@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .select-content {
+            position: relative;
+            /* overflow: hidden; */
+        }
+
+        .select-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            /* text-align: center; */
+
+        }
+
+        .select-value {
+            padding: 5px 10px;
+            height: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script>
+        const test = {
+            wrap: null,
+            valueWrap: '',
+            fn: function (val) {
+                console.log(val)
+                this.valueWrap.innerText = val
+                this.wrap.style.display = 'none'
+            },
+            options: {
+
+            },  
+            init: function (options) {
+                let opt = this.options = Object.assign(options, this.options)
+                console.log(opt)
+                this.wrap = this.generateWrap()
+                this.valueWrap = this.generateValueWrap()
+                let content = this.generateContentWrap()
+                this.wrap.innerHTML = this.dataToDom(opt.data)
+                content.append(this.valueWrap)
+                content.append(this.wrap)
+                let x = document.querySelector(opt.selector)
+                this.handelEvents(this.wrap.childNodes)
+                document.querySelector(opt.selector).append(content)
+                this.valueWrap.addEventListener('click', () => {
+                    let show = this.wrap.style.display
+                    if (show === 'none') {
+                        this.wrap.style.display = 'block'
+
+                    } else {
+                        this.wrap.style.display = 'none'
+                    }
+                }, false)
+
+
+            },
+            handelEvents: function (els) {
+                let origin = this.fn
+                els.forEach(element => {
+                    console.log(element)
+
+                    element.addEventListener('click', () => {
+                        this.fn(element.innerText)
+                        if (this.options.onSelectItem) {
+                            this.options.onSelectItem(element.innerText)
+                        }
+
+                    }, false)
+
+                });
+            },
+            dataToDom: function (data) {
+                let str = data.map(d => '<div>' + d.value + '</div>').join('')
+
+                return str
+            },
+            generateWrap: function () {
+                let dom = document.createElement('div')
+                dom.className = 'select-container'
+                dom.style.display = 'none'
+                return dom
+            },
+            generateContentWrap: function () {
+                let dom = document.createElement('div')
+                dom.className = 'select-content'
+
+                return dom
+            },
+            generateValueWrap: function () {
+                let dom = document.createElement('div')
+                dom.className = 'select-value'
+                return dom
+
+            }
+        }
+        const testdata = [{ key: '1', value: '34' }, { key: '2', value: '451' }]
+        test.init({
+            selector: '#test', data: testdata, onSelectItem: function (val) {
+                console.log('selfdefine', val)
+            }
+        })
+    </script>
+</body>
+
+</html>
