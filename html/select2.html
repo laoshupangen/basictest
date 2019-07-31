@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css"
+        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script src="../javascript/selectTree.js"></script>
+    <style>
+        select {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <select class="js-example-basic-single" id="select2"></select>
+    <br>
+    <select class="form-control" id="testTree">
+        
+    </select>
+    <script>
+        var data = [{
+            id: 'r1',
+            text: 'jjj',
+            
+
+        }, {
+            id: 'r3',
+            text: 'mmm',
+            parent: 'r1'
+        }]
+        $('#select2').select2({
+            data: data,
+            templateSelection: function (state) {
+                //   console.log(state)
+                return state.text
+            },
+            templateResult: function (data, container) {
+                console.log('result', data, container)
+                if (data.element) {
+                    //insert span element and add 'parent' property
+                    var $wrapper = $("<span></span><span>" + data.text + "</span>");
+                    var $element = $(data.element);
+                    $(container).attr("val", $element.val())
+                    if ($element.attr("parent")) {
+                        $(container).attr("parent", $element.attr("parent"));
+                    }
+                    return $wrapper;
+                } else {
+                    return data.text;
+                }
+            },
+            tags: true
+        })
+        $(function () {
+            $("#testTree").select2tree({data:data});
+        });
+    </script>
+</body>
+
+</html>
